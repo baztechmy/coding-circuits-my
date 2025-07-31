@@ -1,0 +1,48 @@
+{
+    "translation": {
+        "example": {
+            "hello": "Halo",
+            "comment-colors": "Cetak setiap huruf dengan warna berbeza",
+            "comment-count": "Kira dari 1 hingga 10"
+        },
+        "tool": {
+            "run": "Jalankan Fail",
+            "save": "Simpan Fail",
+            "fullscreen": "Skrin Penuh",
+            "clear": "Kosongkan",
+            "conn": {
+                "ws": "Sambung WebREPL",
+                "ble": "Sambung Bluetooth",
+                "usb": "Sambung USB/Serial"
+            },
+            "terminal": "Terminal"
+        },
+        "menu": {
+            "package-mgr": "Pengurus Pakej",
+            "file-mgr": "Pengurus Fail",
+            "settings": "Tetapan"
+        },
+        "files": {
+            "no-files": "tiada fail",
+            "connect": "sambung",
+            "used": "digunakan"
+        },
+        "settings": {
+            "conn": "sambungan",
+            "editor": "editor",
+            "other": "lain-lain",
+            "interrupt-device": "Hentikan device",
+            "force-serial-poly": "Paksa guna WebSerial polyfill",
+            "expand-minify-json": "Minify JSON secara automatik",
+            "use-word-wrap": "Bungkus perkataan",
+            "render-markdown": "Paparan Markdown",
+            "use-natural-sort": "Susun secara semula jadi",
+            "lang": "Bahasa",
+            "zoom": "Zoom"
+        },
+        "about": {
+            "cta": "Jika anda sukakan Circuits.my, sila <a id='gh-star'>beri bintang di GitHub</a> ⭐ dan kongsikan di media sosial 📢",
+            "report-bug": "Anda juga boleh <a id='gh-issues'>laporkan bug</a> 🐞"
+        }
+    }
+}
