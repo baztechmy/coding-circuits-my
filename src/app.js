@@ -930,8 +930,8 @@ export function applyTranslation() {
         QS('label[for=lang]').innerText = T('settings.lang')
         QS('label[for=zoom]').innerText = T('settings.zoom')
 
-        QS('#about-cta').innerHTML = T('about.cta')
-        QS('#report-bug').innerHTML = T('about.report-bug')
+        // QS('#about-cta').innerHTML = T('about.cta')
+        // QS('#report-bug').innerHTML = T('about.report-bug')
     } catch (err) {
         report("Error", err)
     }
