@@ -896,8 +896,8 @@ export function applyTranslation() {
         }
         QID('btn-save').setAttribute('title',     T('tool.save') + ` [${metaKey}+S]`)
         QID('btn-run').setAttribute('title',      T('tool.run') + ' [F5]')
-        QID('btn-conn-ws').setAttribute('title',  T('tool.conn.ws'))
-        QID('btn-conn-ble').setAttribute('title', T('tool.conn.ble'))
+        // QID('btn-conn-ws').setAttribute('title',  T('tool.conn.ws'))
+        // QID('btn-conn-ble').setAttribute('title', T('tool.conn.ble'))
         QID('btn-conn-usb').setAttribute('title', T('tool.conn.usb'))
         QID('term-clear').setAttribute('title',   T('tool.clear'))
         QID('tab-term').innerText = T('tool.terminal')
