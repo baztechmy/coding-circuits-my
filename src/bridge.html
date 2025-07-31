@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ViperIDE P2P Bridge</title>
+    <title>Circuits.my P2P Bridge</title>
     <link rel="icon" type="image/png" href="assets/favicon.png"/>
 
     <link rel="stylesheet" href="./viper_lib.css">
@@ -22,9 +22,9 @@
     </style>
 </head>
 <body>
-    <h2>ViperIDE P2P Bridge</h2>
+    <h2>Circuits.my P2P Bridge</h2>
 
-    <p>The bridge allows creating a secure, peer-to-peer connection between the device and ViperIDE <b>across the internet</b>.</p>
+    <p>The bridge allows creating a secure, peer-to-peer connection between the device and Circuits.my <b>across the internet</b>.</p>
 
     <ol>
         <li>
@@ -201,7 +201,7 @@ async function connectDevice(type) {
     QID('ide-link').textContent = 'https://viper-ide.org?rtc=' + rtc.info.id
 
     rtc.onConnect(() => {
-        toastr.info('ViperIDE connected')
+        toastr.info('Circuits.my connected')
     })
 
     rtc.onReceive(async (data) => {
@@ -215,7 +215,7 @@ async function connectDevice(type) {
     })
 
     rtc.onDisconnect(() => {
-        toastr.warning('ViperIDE disconnected')
+        toastr.warning('Circuits.my disconnected')
     })
 
     port.onDisconnect(() => {

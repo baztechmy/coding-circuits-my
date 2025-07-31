@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ViperIDE</title>
+    <title>Circuits.my</title>
     <link rel="icon" type="image/png" href="assets/favicon.png"/>
     <link rel="manifest" href="manifest.json">
 
@@ -13,7 +13,7 @@
     <div id="tool-panel">
         <div>
             <button onclick="app.toggleSideMenu()"><i class="fa-solid fa-bars"></i></button>
-            <span class="logo">ViperIDE</span>
+            <span class="logo">Circuits.my</span>
             <button title="Save File [Ctrl+S]"   onclick="app.saveCurrentFile()" id="btn-save"><i class="fa-solid fa-download"></i></button>
             <button title="Run File [F5]"        onclick="app.runCurrentFile()"  id="btn-run"><i class="fa-solid fa-circle-play" id="btn-run-icon"></i></button>
         </div>
@@ -60,9 +60,9 @@
                 <div id="menu-tools-title">Tools</div>
                 <div id="menu-tools-list">
                     <div class="title-lines" id="menu-tools-line-conn">device connection</div>
-                    <div><a href="https://github.com/vshymanskyy/ViperIDE/blob/main/docs/Web-REPL-Relay.md" target="_blank">    <i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> WebREPL over internet 🌎</a></div>
-                    <div><a href="https://github.com/vshymanskyy/ViperIDE/blob/main/docs/Web-REPL-Server.md" target="_blank">   <i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> WebREPL in local network</a></div>
-                    <div><a href="https://github.com/vshymanskyy/ViperIDE/blob/main/docs/Bluetooth-REPL.md" target="_blank">    <i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> Bluetooth REPL</a></div>
+                    <!-- <div><a href="https://github.com/vshymanskyy/Circuits.my/blob/main/docs/Web-REPL-Relay.md" target="_blank">    <i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> WebREPL over internet 🌎</a></div> -->
+                    <!-- <div><a href="https://github.com/vshymanskyy/Circuits.my/blob/main/docs/Web-REPL-Server.md" target="_blank">   <i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> WebREPL in local network</a></div> -->
+                    <!-- <div><a href="https://github.com/vshymanskyy/Circuits.my/blob/main/docs/Bluetooth-REPL.md" target="_blank">    <i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> Bluetooth REPL</a></div> -->
                     <div><a href="bridge.html" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> P2P Bridge</a></div>
                     <div><a href="benchmark.html" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> Device Benchmark</a></div>
 
@@ -74,7 +74,7 @@
                     <div><a href="#" onclick="app.pyMinify()" id="py-minify">🤏 Minify current file</a></div>
 
                     <!--div><a href="#" onclick="TODO()" id="download-all">📥 Download all files</a></div>
-                    <div><a href="#" onclick="TODO()" id="publish">🚀 Publish on ViperIDE</a></div>
+                    <div><a href="#" onclick="TODO()" id="publish">🚀 Publish on Circuits.my</a></div>
 
                     <div class="title-lines" id="menu-tools-blynk">Blynk IoT</div>
                     <div><a href="#" onclick="TODO()" id="blynk-ota-package">📦 Generate OTA package</a></div-->
@@ -83,7 +83,7 @@
             <div id="menu-settings" class="tab-content">
                 <div id="menu-settings-title">Settings</div>
                 <div id="menu-settings-list">
-                    <div><input type="checkbox" id="advanced-mode"/><label for="advanced-mode">🔬 Advanced mode</label> (<a href="https://github.com/vshymanskyy/ViperIDE/blob/main/docs/Advanced-Mode.md" target="_blank">?</a>)</div>
+                    <!-- <div><input type="checkbox" id="advanced-mode"/><label for="advanced-mode">🔬 Advanced mode</label> (<a href="https://github.com/vshymanskyy/Circuits.my/blob/main/docs/Advanced-Mode.md" target="_blank">?</a>)</div> -->
                     <div class="title-lines" id="menu-line-conn">connection</div>
                     <div><input type="checkbox" id="interrupt-device" checked/><label for="interrupt-device">Interrupt device</label></div>
                     <div><input type="checkbox" id="force-serial-poly"/><label for="force-serial-poly">Force WebSerial polyfill</label></div>
@@ -144,10 +144,10 @@
                 </div>
             </div>
             <div id="menu-about" class="tab-content">
-                <a class="github-fork-ribbon left-top" href="https://github.com/vshymanskyy/ViperIDE" target="_blank" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+                <!-- <a class="github-fork-ribbon left-top" href="https://github.com/vshymanskyy/Circuits.my" target="_blank" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a> -->
                 <div style="text-align: center; padding: 50px 0 0 0;">
                     <img src="assets/logo_1024.png" alt="Logo" width="30%">
-                    <div style="font-size:1.5em;">ViperIDE</div>
+                    <div style="font-size:1.5em;">Circuits.my</div>
                     <div id='viper-ide-version'></div>
                     <small><div id='viper-ide-build'></div></small>
                     <p>
@@ -155,19 +155,19 @@
                         by <a class="link" href="https://x.com/vshymanskyy" target="_blank">Volodymyr Shymanskyy</a>
                     </p>
                 </div>
-                <div>
-                    <hr/>
-                    <p id="about-cta">
-                        If you like ViperIDE, please <a class="link" id="gh-star">give it a GitHub star</a> ⭐ and spread the word on social media 📢
-                    </p>
-                    <p id="report-bug">
-                        You can also <a class="link" id="gh-issues">report a bug</a> 🐞
-                    </p>
-                    <hr/>
-                </div>
-                <p style="text-align: center;">
-                    With 💙💛 from <a class="link" href="https://stand-with-ukraine.pp.ua" target="_blank">Ukraine</a>
-                </p>
+                <!-- <div> -->
+                <!--     <hr/> -->
+                <!--     <p id="about-cta"> -->
+                <!--         If you like Circuits.my, please <a class="link" id="gh-star">give it a GitHub star</a> ⭐ and spread the word on social media 📢 -->
+                <!--     </p> -->
+                <!--     <p id="report-bug"> -->
+                <!--         You can also <a class="link" id="gh-issues">report a bug</a> 🐞 -->
+                <!--     </p> -->
+                <!--     <hr/> -->
+                <!-- </div> -->
+                <!-- <p style="text-align: center;"> -->
+                <!--     With 💙💛 from <a class="link" href="https://stand-with-ukraine.pp.ua" target="_blank">Ukraine</a> -->
+                <!-- </p> -->
             </div>
         </div>
         <div id="main-editor">
