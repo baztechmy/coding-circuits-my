@@ -7,7 +7,7 @@
             "homepage": "https://github.com/Harrypoggers25/HpIDE/tree/main/packages/circuit-my-tools",
             "versions": [
                 {
-                    "version": "1.0.0",
+                    "version": "latest",
                     "url": "github:Harrypoggers25/HpIDE/packages/circuit-my-tools/packages.json"
                 }
             ]
