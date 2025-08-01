@@ -356,8 +356,7 @@ async function execReplNoFollow(cmd) {
     //await port.write('\x04')            // Ctrl-D: execute
 }
 
-function _updateFileTree(fs_tree, fs_stats)
-{
+function _updateFileTree(fs_tree, fs_stats) {
     let [fs_used, _fs_free, fs_size] = fs_stats;
 
     function sorted(content) {
