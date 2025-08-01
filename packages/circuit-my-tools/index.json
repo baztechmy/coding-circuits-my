@@ -8,7 +8,7 @@
             "versions": [
                 {
                     "version": "latest",
-                    "url": "github:Harrypoggers25/HpIDE/packages/circuit-my-tools/packages.json"
+                    "url": "github:Harrypoggers25/HpIDE/packages/circuit-my-tools/package.json"
                 }
             ]
         }
