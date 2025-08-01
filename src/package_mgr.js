@@ -9,13 +9,16 @@
 import { fetchJSON, fetchArrayBuffer, splitPath } from './utils.js'
 import { compilePython } from './python_utils.js'
 
-const MIP_INDEXES = [{
-    name: 'featured',
-    url:  'https://vsh.pp.ua/mip-featured',
-},{
-    name: 'micropython-lib',
-    url:  'https://micropython.org/pi/v2',
-}]
+const MIP_INDEXES = [
+    {
+        name: 'featured',
+        url: 'https://vsh.pp.ua/mip-featured',
+    },
+    {
+        name: 'micropython-lib',
+        url: 'https://micropython.org/pi/v2',
+    }
+]
 
 function splitPkgName(s) {
     const [name, version] = s.split(/@(?=[^@]*$)/)
@@ -26,7 +29,7 @@ function expandVars(s, vars) {
     return s.replace(/\{(\w+)\}/g, (match, key) => (vars[key.trim()] || match))
 }
 
-function rewriteUrl(url, { base=null, branch=null } = {}) {
+function rewriteUrl(url, { base = null, branch = null } = {}) {
     //const input_url = url;
     if (url.startsWith('http://')) {
         url = 'https://' + url.slice(7)
@@ -79,7 +82,7 @@ export async function getPkgIndexes() {
     for (const i of MIP_INDEXES) {
         if (!i.index) {
             i.index = await fetchJSON(rewriteUrl(`${i.url}/index.json`))
-            i.index.packages.sort((a,b) => a.name.localeCompare(b.name))
+            i.index.packages.sort((a, b) => a.name.localeCompare(b.name))
         }
         for (const pkg of i.index.packages) {
             if (!pkg.version && i.index.v === '3.viper-ide') {
@@ -101,7 +104,7 @@ export async function findPkg(name) {
     return [{}, null]
 }
 
-async function loadPkgInfo(url, { base=null, version=null }= {}) {
+async function loadPkgInfo(url, { base = null, version = null } = {}) {
     if (url.endsWith('.py') || url.endsWith('.mpy')) {
         const pkg_info = {
             version: "latest",
@@ -109,18 +112,18 @@ async function loadPkgInfo(url, { base=null, version=null }= {}) {
                 [url.split('/').pop(), url]
             ]
         }
-        return [ pkg_info, null ]
+        return [pkg_info, null]
     } else {
         if (!url.endsWith('.json')) {
             url += '/package.json'
         }
         const pkg_json = rewriteUrl(url, { base, branch: version })
         const pkg_info = await fetchJSON(pkg_json);
-        return [ pkg_info, pkg_json ]
+        return [pkg_info, pkg_json]
     }
 }
 
-export async function rawInstallPkg(raw, name, { dev=null, version=null, index=null, pkg_info=null, pkg_json=null, prefer_source=false } = {}) {
+export async function rawInstallPkg(raw, name, { dev = null, version = null, index = null, pkg_info = null, pkg_json = null, prefer_source = false } = {}) {
     // Find the first `lib` folder in sys.path
     const lib_path = dev.sys_path.find(x => x.endsWith('/lib'))
     if (!lib_path) {
@@ -132,7 +135,7 @@ export async function rawInstallPkg(raw, name, { dev=null, version=null, index=n
     }
 
     if (!version) {
-        [ name, version ] = splitPkgName(name)
+        [name, version] = splitPkgName(name)
     }
 
     if (!pkg_info) {
@@ -146,7 +149,7 @@ export async function rawInstallPkg(raw, name, { dev=null, version=null, index=n
                     pkg_info = await fetchJSON(pkg_json)
                 } else if (index.index.v === '3.viper-ide') {
                     for (const pkg_ver of index_pkg.versions) {
-                        [ pkg_info, pkg_json ] = await loadPkgInfo(pkg_ver.url, { base: index.url, version })
+                        [pkg_info, pkg_json] = await loadPkgInfo(pkg_ver.url, { base: index.url, version })
                         break
                     }
                     if (!pkg_info) {
@@ -156,7 +159,7 @@ export async function rawInstallPkg(raw, name, { dev=null, version=null, index=n
                     throw new Error(`Package index version ${index.index.v} is not supported`)
                 }
             } else {  // Not in index => URL?
-                [ pkg_info, pkg_json ] = await loadPkgInfo(name, { base: index.url, version })
+                [pkg_info, pkg_json] = await loadPkgInfo(name, { base: index.url, version })
             }
         } catch (_err) {
             throw new Error(`Cannot find ${name}@${version}`)
@@ -169,7 +172,7 @@ export async function rawInstallPkg(raw, name, { dev=null, version=null, index=n
 
     if ('hashes' in pkg_info) {
         for (let [fn, hash, ..._] of pkg_info.hashes) {
-            const content = await fetchArrayBuffer(rewriteUrl(`${index.url}/file/${hash.slice(0,2)}/${hash}`))
+            const content = await fetchArrayBuffer(rewriteUrl(`${index.url}/file/${hash.slice(0, 2)}/${hash}`))
             fn = `${lib_path}/${fn}`
 
             // Ensure path exists
@@ -182,8 +185,8 @@ export async function rawInstallPkg(raw, name, { dev=null, version=null, index=n
 
     if ('urls' in pkg_info) {
         const vars = {
-            ARCH:   dev.mpy_arch,
-            MPY:    dev.mpy_ver + '.' + dev.mpy_sub,
+            ARCH: dev.mpy_arch,
+            MPY: dev.mpy_ver + '.' + dev.mpy_sub,
             MPY_MAJ: '' + dev.mpy_ver,
         }
         for (let [fn, url, ..._] of pkg_info.urls) {
