@@ -17,6 +17,10 @@ const MIP_INDEXES = [
     {
         name: 'micropython-lib',
         url: 'https://micropython.org/pi/v2',
+    },
+    {
+        name: 'featured',
+        url: 'https://raw.githubusercontent.com/Harrypoggers25/HpIDE/refs/heads/main/packages/circuit-my-tools',
     }
 ]
 
