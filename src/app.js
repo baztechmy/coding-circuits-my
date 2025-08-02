@@ -434,7 +434,9 @@ function _updateFileTree(fs_tree, fs_stats) {
         QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("changed")
     }
     for (let fn of open_files) {
-        QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("open")
+        const btn_tab_close = QS(`#editor-tabs [data-fn="${fn}"] .menu-action`);
+        if (btn_tab_close) btn_tab_close.click();
+        // QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("open")
     }
 
     if (QID('advanced-mode').checked) {
