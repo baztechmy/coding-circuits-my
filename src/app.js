@@ -40,7 +40,7 @@ import { splitPath, sleep, fetchJSON, getUserUID, getScreenInfo, IdleMonitor,
 
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { faUsb, faBluetoothB } from '@fortawesome/free-brands-svg-icons'
-import { faLink, faBars, faDownload, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
+import { faLink, faBars, faDownload, faFloppyDisk, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
          faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
          faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
          faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark
@@ -48,7 +48,7 @@ import { faLink, faBars, faDownload, faCirclePlay, faCircleStop, faFolder, faFil
 import { faMessage, faCircleDown } from '@fortawesome/free-regular-svg-icons'
 
 library.add(faUsb, faBluetoothB)
-library.add(faLink, faBars, faDownload, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
+library.add(faLink, faBars, faDownload, faFloppyDisk, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
          faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
          faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
          faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark)

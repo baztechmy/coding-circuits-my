@@ -139,7 +139,8 @@ button.connected {
 
 .fa-power-off { color: #ffcc4d; }
 .fa-bug { color: #ffcc4d; }
-.fa-download { color: #87c244; }
+/* .fa-download { color: #87c244; } */
+.fa-floppy-disk { color: #87c244; }
 .fa-circle-play { color: #3b88c3; }
 .fa-circle-stop { color: #ff7272; }
 .fa-circle-info { color: #3b88c3; }
