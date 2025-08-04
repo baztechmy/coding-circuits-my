@@ -237,3 +237,20 @@ button.connected {
     display: block;
 }
 
+/* Coding-circuit-my */
+#menu-pkg-list .menu-action {
+    color: lightgrey;
+    opacity: 100%;
+}
+
+#menu-pkg-list .menu-action span {
+    padding-left: 2px;
+    padding-right: 2px;
+    color: white;
+    background-color: #87c244;
+    opacity: 100%;
+}
+
+#menu-pkg-list .menu-action span:hover {
+    background-color: #a7db6d;
+}

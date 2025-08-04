@@ -428,6 +428,7 @@ function _updateFileTree(fs_tree, fs_stats) {
             }
         }
     }
+    console.dir(fs_tree, { depth: null });
     traverse(fs_tree, 1)
 
     for (let fn of changed_files) {
@@ -720,7 +721,7 @@ export async function loadAllPkgIndexes() {
             }
             pkgList.insertAdjacentHTML('beforeend', `<div>
                 ${offset}<span><i class="fa-solid fa-cube fa-fw"></i> ${pkg.name}${icon}</span>
-                <a href="#" class="menu-action" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} <i class="fa-regular fa-circle-down"></i></a>
+                <a href="#" class="menu-action" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} <span><i class="fa-regular fa-circle-down"></i> Install</span></a>
             </div>`)
         }
     }
