@@ -650,7 +650,7 @@ export async function runCurrentFile() {
 
     if (isInRunMode) {
         await port.write('\r\x03\x03');   // Ctrl-C twice: interrupt any running program
-        await port.write('\r\x03\x03\x04');   // Ctrl-C twice: interrupt any running program
+        await port.write('\r\x03\x03\x04');
         return
     }
 
