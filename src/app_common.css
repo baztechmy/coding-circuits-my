@@ -238,6 +238,15 @@ button.connected {
 }
 
 /* Coding-circuit-my */
+
+#tool-panel #btn-save:hover svg {
+    color: #a7db6d;
+}
+
+#tool-panel #btn-run:hover svg {
+    color: #7bbae9;
+}
+
 #menu-pkg-list .menu-action {
     color: lightgrey;
     opacity: 100%;
@@ -254,3 +263,16 @@ button.connected {
 #menu-pkg-list .menu-action span:hover {
     background-color: #a7db6d;
 }
+
+#menu-pkg-list .menu-action span.installing {
+    background-color: #e1aa36;
+}
+
+#menu-pkg-list .menu-action span.installed {
+    background-color: #cb0404;
+}
+
+#menu-pkg-list .menu-action span.installed:hover {
+    background-color: #ff3f33;
+}
+

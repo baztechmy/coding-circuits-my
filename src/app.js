@@ -721,7 +721,7 @@ export async function loadAllPkgIndexes() {
             }
             pkgList.insertAdjacentHTML('beforeend', `<div>
                 ${offset}<span><i class="fa-solid fa-cube fa-fw"></i> ${pkg.name}${icon}</span>
-                <a href="#" class="menu-action" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} <span><i class="fa-regular fa-circle-down"></i> Install</span></a>
+                <a href="#" class="menu-action" data-fn="${pkg.name}" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} <span class="btn-menu-pkg-action"><i class="fa-regular fa-circle-down"></i> Install</span></a>
             </div>`)
         }
     }
@@ -748,14 +748,21 @@ export async function installPkg(pkg, { version=null } = {}) {
         toastr.info('Connect yout board first')
         return
     }
-    const raw = await MpRawMode.begin(port)
+    const raw = await MpRawMode.begin(port);
+    const prev_btn_pkg = QS(`#menu-pkg-list [data-fn="${pkg}"] span`);
+    const pkg_list = QS(`#menu-pkg-list [data-fn="${pkg}"]`);
     try {
-        await _raw_installPkg(raw, pkg, { version })
-        await _raw_updateFileTree(raw)
+        prev_btn_pkg.remove();
+        pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action installing">Installing...</span>`);
+        await _raw_installPkg(raw, pkg, { version });
+        await _raw_updateFileTree(raw);
+        QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
+        pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action installed"><i class="fa-solid fa-xmark fa-fw"></i> Remove</span>`)
     } catch (err) {
         report('Installing failed', err)
+        pkg_list.appendChild(prev_btn_pkg);
     } finally {
-        await raw.end()
+        await raw.end();
     }
 }
 

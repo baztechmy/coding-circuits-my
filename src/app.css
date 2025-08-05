@@ -275,3 +275,9 @@ body.loaded {
     }
 }
 
+/* Coding-circuit-my */
+
+#tool-panel, #menu-tabs, #terminal-tabs {
+    background-color: #393939;
+}
+
