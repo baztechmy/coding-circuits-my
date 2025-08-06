@@ -4,11 +4,11 @@
     "packages": [
         {
             "name": "circuit-my-tools",
-            "homepage": "https://github.com/Harrypoggers25/HpIDE/tree/main/packages/circuit-my-tools",
+            "homepage": "https://github.com/baztechmy/coding-circuits-my/tree/main/packages/circuit-my-tools",
             "versions": [
                 {
                     "version": "latest",
-                    "url": "github:Harrypoggers25/HpIDE/packages/circuit-my-tools/package.json"
+                    "url": "github:baztechmy/coding-circuits-my/packages/circuit-my-tools/package.json"
                 }
             ]
         }
