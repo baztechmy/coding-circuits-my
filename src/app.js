@@ -758,6 +758,7 @@ export async function installPkg(pkg, { version=null } = {}) {
         pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action installed"><i class="fa-solid fa-xmark fa-fw"></i> Remove</span>`)
     } catch (err) {
         report('Installing failed', err)
+        QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
         pkg_list.appendChild(prev_btn_pkg);
     } finally {
         await raw.end();
