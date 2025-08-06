@@ -356,7 +356,7 @@ async function execReplNoFollow(cmd) {
     //await port.write('\x04')            // Ctrl-D: execute
 }
 
-function _updateFileTree(fs_tree, fs_stats) {
+function _updateFileTree(fs_tree, fs_stats, actionType) {
     let [fs_used, _fs_free, fs_size] = fs_stats;
 
     function sorted(content) {
@@ -435,9 +435,11 @@ function _updateFileTree(fs_tree, fs_stats) {
         QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("changed")
     }
     for (let fn of open_files) {
-        const btn_tab_close = QS(`#editor-tabs [data-fn="${fn}"] .menu-action`);
-        if (btn_tab_close) btn_tab_close.click();
-        // QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("open")
+        if (actionType === 'DELETE') {
+            QS(`#editor-tabs [data-fn="${fn}"] .menu-action`).click();
+        } else {
+            QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("open")
+        }
     }
 
     if (QID('advanced-mode').checked) {
@@ -449,7 +451,7 @@ function _updateFileTree(fs_tree, fs_stats) {
 
 }
 
-async function _raw_updateFileTree(raw) {
+async function _raw_updateFileTree(raw, actionType = '') {
     let fs_stats = [null, null, null];
     try {
         fs_stats = await raw.getFsStats()
@@ -459,7 +461,7 @@ async function _raw_updateFileTree(raw) {
 
     const fs_tree = await raw.walkFs()
 
-    _updateFileTree(fs_tree, fs_stats);
+    _updateFileTree(fs_tree, fs_stats, actionType);
 }
 
 export function fileTreeSelect(fn) {
