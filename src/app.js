@@ -328,7 +328,7 @@ export async function removeFile(path) {
     const raw = await MpRawMode.begin(port)
     try {
         await raw.removeFile(path)
-        await _raw_updateFileTree(raw)
+        await _raw_updateFileTree(raw, path);
         document.dispatchEvent(new CustomEvent("fileRemoved", {detail: {path: path}}))
     } finally {
         await raw.end()
@@ -341,7 +341,7 @@ export async function removeDir(path) {
     const raw = await MpRawMode.begin(port)
     try {
         await raw.removeDir(path)
-        await _raw_updateFileTree(raw)
+        await _raw_updateFileTree(raw, path);
         document.dispatchEvent(new CustomEvent("dirRemoved", {detail: {path: path}}))
     } finally {
         await raw.end()
@@ -356,7 +356,7 @@ async function execReplNoFollow(cmd) {
     //await port.write('\x04')            // Ctrl-D: execute
 }
 
-function _updateFileTree(fs_tree, fs_stats, actionType) {
+function _updateFileTree(fs_tree, fs_stats, ignoredPath) {
     let [fs_used, _fs_free, fs_size] = fs_stats;
 
     function sorted(content) {
@@ -432,14 +432,10 @@ function _updateFileTree(fs_tree, fs_stats, actionType) {
     traverse(fs_tree, 1)
 
     for (let fn of changed_files) {
-        QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("changed")
+        if (fn !== ignoredPath) QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("changed");
     }
     for (let fn of open_files) {
-        if (actionType === 'DELETE') {
-            QS(`#editor-tabs [data-fn="${fn}"] .menu-action`).click();
-        } else {
-            QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("open")
-        }
+        if (fn !== ignoredPath) QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("open");
     }
 
     if (QID('advanced-mode').checked) {
@@ -451,7 +447,7 @@ function _updateFileTree(fs_tree, fs_stats, actionType) {
 
 }
 
-async function _raw_updateFileTree(raw, actionType = '') {
+async function _raw_updateFileTree(raw, ignoredPath = '') {
     let fs_stats = [null, null, null];
     try {
         fs_stats = await raw.getFsStats()
@@ -461,7 +457,7 @@ async function _raw_updateFileTree(raw, actionType = '') {
 
     const fs_tree = await raw.walkFs()
 
-    _updateFileTree(fs_tree, fs_stats, actionType);
+    _updateFileTree(fs_tree, fs_stats, ignoredPath);
 }
 
 export function fileTreeSelect(fn) {
