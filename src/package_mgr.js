@@ -193,7 +193,7 @@ export async function rawInstallPkg(raw, name, { dev = null, version = null, ind
             MPY: dev.mpy_ver + '.' + dev.mpy_sub,
             MPY_MAJ: '' + dev.mpy_ver,
         }
-        if (!(await raw.fileExists('/lib/package.json'))) await raw.writeFile('/lib/package.json', '{}');
+        // if (!(await raw.fileExists('/lib/package.json'))) await raw.writeFile('/lib/package.json', '{}');
         const package_out = JSON.parse(await raw.readFileText('/lib/package.json'));
         for (let [fn, url, ..._] of pkg_info.urls) {
             url = rewriteUrl(url, { base: pkg_json, branch: version })
