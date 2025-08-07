@@ -115,6 +115,16 @@ with open('${fn}','rb') as f:
         }
     }
 
+    async readFileText(fn) {
+        const rsp = await this.exec(`
+with open('${fn}', 'r') as f:
+ for line in f:
+  print(line, end='')
+`);
+        return rsp;
+    }
+
+
     async writeFile(fn, data, chunk_size=128, direct=false) {
         console.log(`Writing ${fn}`)
         if (typeof data === 'string' || data instanceof String) {
@@ -204,6 +214,17 @@ print('|'.join(str(x) for x in d))
         return { machine, release, sysname, version, mpy_arch, mpy_ver, mpy_sub, sys_path }
     }
 
+    async fileExists(fn) {
+        const rsp = await this.exec(`
+import os
+try:
+ os.stat('${fn}')
+ print(1)
+except:
+ print(0)
+`);
+        return rsp.trim() === '1';
+    }
 
     async touchFile(fn) {
         await this.exec(`
