@@ -699,18 +699,11 @@ export async function runCurrentFile() {
  * Package Management
  */
 
+const loadedPkgs = [];
 export async function loadAllPkgIndexes() {
+    while (loadedPkgs.length) loadedPkgs.pop();
     const pkgList = QID('menu-pkg-list')
     pkgList.innerHTML = ''
-
-    const package_in = await (async () => {
-        if (!port) return {};
-        const raw = await MpRawMode.begin(port);
-        if (!(await raw.fileExists('/lib/package.json'))) await raw.writeFile('/lib/package.json', '{}');
-        const package_in = JSON.parse(await raw.readFileText('/lib/package.json'));
-        await raw.end();
-        return package_in;
-    })();
 
     for (const i of await getPkgIndexes()) {
         pkgList.insertAdjacentHTML('beforeend', `<div class="title-lines">${i.name}</div>`)
@@ -731,16 +724,40 @@ export async function loadAllPkgIndexes() {
             if (keywords.includes('native')) {
                 icon = ' <i class="fa-solid fa-gauge-high" title="Efficient native module"></i>'
             }
-            pkgList.insertAdjacentHTML('beforeend', `<div>
-                ${offset}<span><i class="fa-solid fa-cube fa-fw"></i> ${pkg.name}${icon}</span>
-                <a href="#" class="menu-action" data-fn="${pkg.name}" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} </a>
-            </div>`);
-            const html_btn = package_in[pkg.name] ?
-                '<span class="btn-mcnu-pkg-action installed"><i class="fa-solid fa-xmark fa-fw"></i> Remove</span>' :
-                '<span class="btn-menu-pkg-action"><i class="fa-regular fa-circle-down"></i> Install</span>';
-            const pkg_list = QS(`#menu-pkg-list [data-fn="${pkg.name}"]`);
-            pkg_list.insertAdjacentHTML('beforeend', html_btn);
+            pkgList.insertAdjacentHTML('beforeend', `<div class="menu-pkg-item" data-fn="${pkg.name}"></div>`);
+            loadedPkgs.push({ name: pkg.name, version: pkg.version, icon: icon, offset: offset });
         }
+    }
+    await refreshLoadedPkgIndexes();
+}
+
+export async function refreshLoadedPkgIndexes() {
+    if (!port) {
+        for (const pkg of loadedPkgs) {
+            QS(`#menu-pkg-list [data-fn="${pkg.name}"]`).innerHTML = '';
+            QS(`#menu-pkg-list [data-fn="${pkg.name}"]`).insertAdjacentHTML('beforeend', `
+                ${pkg.offset}<span><i class="fa-solid fa-cube fa-fw"></i> ${pkg.name}${pkg.icon}</span>
+                <a href="#" class="menu-pkg-btn menu-action" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} <i class="fa-solid fa-link-slash"></i></a>
+            `);
+        }
+        return;
+    }
+    const packageIn = await (async () => {
+        const raw = await MpRawMode.begin(port);
+        if (!(await raw.fileExists('/lib/package.json'))) await raw.writeFile('/lib/package.json', '{}');
+        const packageIn = JSON.parse(await raw.readFileText('/lib/package.json'));
+        await raw.end();
+        return packageIn;
+    })();
+    for (const pkg of loadedPkgs) {
+        const pkgBtnContent = packageIn[pkg.name] ?
+            '<span class="btn-menu-pkg-action installed"><i class="fa-solid fa-xmark fa-fw"></i> Remove</span>' :
+            '<span class="btn-menu-pkg-action"><i class="fa-regular fa-circle-down"></i> Install</span>';
+        QS(`#menu-pkg-list [data-fn="${pkg.name}"]`).innerHTML = '';
+        QS(`#menu-pkg-list [data-fn="${pkg.name}"]`).insertAdjacentHTML('beforeend', `
+            ${pkg.offset}<span><i class="fa-solid fa-cube fa-fw"></i> ${pkg.name}${pkg.icon}</span>
+            <a href="#" class="menu-pkg-btn menu-action" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} ${pkgBtnContent}</a>
+        `);
     }
 }
 
@@ -779,8 +796,8 @@ export async function installPkg(pkg, { version = null } = {}) {
     }
     const raw = await MpRawMode.begin(port);
 
-    const prev_btn_pkg = QS(`#menu-pkg-list [data-fn="${pkg}"] span`);
-    const pkg_list = QS(`#menu-pkg-list [data-fn="${pkg}"]`);
+    const prev_btn_pkg = QS(`#menu-pkg-list [data-fn="${pkg}"] a span`);
+    const pkg_list = QS(`#menu-pkg-list [data-fn="${pkg}"] a`);
 
     if (!(await raw.fileExists('/lib/package.json'))) await raw.writeFile('/lib/package.json', '{}');
     const package_in = JSON.parse(await raw.readFileText('/lib/package.json'));
@@ -790,11 +807,11 @@ export async function installPkg(pkg, { version = null } = {}) {
             pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action removing">Removing...</span>`);
             await _raw_removePkg(raw, pkg, package_in);
             await _raw_updateFileTree(raw);
-            QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
+            QS(`#menu-pkg-list [data-fn="${pkg}"] a span`).remove();
             pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action"><i class="fa-regular fa-circle-down"></i> Install</span>`)
         } catch (err) {
             report(`Failed to remove ${pkg}`, err);
-            QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
+            QS(`#menu-pkg-list [data-fn="${pkg}"] a span`).remove();
             pkg_list.appendChild(prev_btn_pkg);
         } finally {
             await raw.end();
@@ -808,11 +825,11 @@ export async function installPkg(pkg, { version = null } = {}) {
         pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action installing">Installing...</span>`);
         await _raw_installPkg(raw, pkg, { version });
         await _raw_updateFileTree(raw);
-        QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
+        QS(`#menu-pkg-list [data-fn="${pkg}"] a span`).remove();
         pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action installed"><i class="fa-solid fa-xmark fa-fw"></i> Remove</span>`)
     } catch (err) {
         report('Failed to install', err)
-        QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
+        QS(`#menu-pkg-list [data-fn="${pkg}"] a span`).remove();
         pkg_list.appendChild(prev_btn_pkg);
     } finally {
         await raw.end();
