@@ -34,29 +34,32 @@ import { MicroPythonWASM } from './emulator.js'
 import { marked } from 'marked'
 import { UAParser } from 'ua-parser-js'
 
-import { splitPath, sleep, fetchJSON, getUserUID, getScreenInfo, IdleMonitor,
-         getCssPropertyValue, QSA, QS, QID, iOS, sanitizeHTML, isRunningStandalone,
-         sizeFmt, indicateActivity, setupTabs, report } from './utils.js'
+import {
+    splitPath, sleep, fetchJSON, getUserUID, getScreenInfo, IdleMonitor,
+    getCssPropertyValue, QSA, QS, QID, iOS, sanitizeHTML, isRunningStandalone,
+    sizeFmt, indicateActivity, setupTabs, report
+} from './utils.js'
 
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 import { faUsb, faBluetoothB } from '@fortawesome/free-brands-svg-icons'
-import { faLink, faBars, faDownload, faFloppyDisk, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
-         faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
-         faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
-         faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark
-       } from '@fortawesome/free-solid-svg-icons'
+import {
+    faLink, faBars, faDownload, faFloppyDisk, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
+    faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
+    faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
+    faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark
+} from '@fortawesome/free-solid-svg-icons'
 import { faMessage, faCircleDown } from '@fortawesome/free-regular-svg-icons'
 
 library.add(faUsb, faBluetoothB)
 library.add(faLink, faBars, faDownload, faFloppyDisk, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
-         faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
-         faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
-         faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark)
+    faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
+    faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
+    faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark)
 library.add(faMessage, faCircleDown)
 dom.watch()
 
 function getBuildDate() {
-    return (new Date(VIPER_IDE_BUILD)).toISOString().substring(0, 19).replace('T',' ')
+    return (new Date(VIPER_IDE_BUILD)).toISOString().substring(0, 19).replace('T', ' ')
 }
 
 const T = i18next.t.bind(i18next)
@@ -259,12 +262,12 @@ export async function connectDevice(type) {
 
             _updateFileTree(fs_tree, fs_stats);
 
-            if        (fs_tree.filter(x => x.path === '/main.py').length) {
+            if (fs_tree.filter(x => x.path === '/main.py').length) {
                 await _raw_loadFile(raw, '/main.py')
             } else if (fs_tree.filter(x => x.path === '/code.py').length) {
                 await _raw_loadFile(raw, '/code.py')
             }
-            document.dispatchEvent(new CustomEvent("deviceConnected", {detail: {port: port}}))
+            document.dispatchEvent(new CustomEvent("deviceConnected", { detail: { port: port } }))
 
         } catch (err) {
             if (err.message.includes('Timeout')) {
@@ -329,7 +332,7 @@ export async function removeFile(path) {
     try {
         await raw.removeFile(path)
         await _raw_updateFileTree(raw, path);
-        document.dispatchEvent(new CustomEvent("fileRemoved", {detail: {path: path}}))
+        document.dispatchEvent(new CustomEvent("fileRemoved", { detail: { path: path } }))
     } finally {
         await raw.end()
     }
@@ -342,7 +345,7 @@ export async function removeDir(path) {
     try {
         await raw.removeDirRecursive(path);
         await _raw_updateFileTree(raw, path);
-        document.dispatchEvent(new CustomEvent("dirRemoved", {detail: {path: path}}))
+        document.dispatchEvent(new CustomEvent("dirRemoved", { detail: { path: path } }))
     } finally {
         await raw.end()
     }
@@ -363,11 +366,11 @@ function _updateFileTree(fs_tree, fs_stats, ignoredPath) {
         // Natural sort by name
         if (QID('use-natural-sort').checked) {
             const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
-            content.sort((a,b) => collator.compare(a.name, b.name))
+            content.sort((a, b) => collator.compare(a.name, b.name))
         }
 
         // Stable-sort folders first
-        content.sort((a,b) => (('content' in a)?0:1) - (('content' in b)?0:1))
+        content.sort((a, b) => (('content' in a) ? 0 : 1) - (('content' in b) ? 0 : 1))
 
         return content
     }
@@ -387,7 +390,7 @@ function _updateFileTree(fs_tree, fs_stats, ignoredPath) {
         <span class="folder name"><i class="fa-solid fa-folder fa-fw"></i> /</span>
         <a href="#" class="menu-action" title="Refresh" onclick="app.refreshFileTree();return false;"><i class="fa-solid fa-arrows-rotate fa-fw"></i></a>
         <a href="#" class="menu-action" title="Create" onclick="app.createNewFile('/');return false;"><i class="fa-solid fa-plus fa-fw"></i></a>
-        <span class="menu-action">${T('files.used')} ${sizeFmt(fs_used,0)} / ${sizeFmt(fs_size,0)}</span>
+        <span class="menu-action">${T('files.used')} ${sizeFmt(fs_used, 0)} / ${sizeFmt(fs_size, 0)}</span>
     </div>`
     function traverse(node, depth) {
         const offset = '&emsp;'.repeat(depth)
@@ -398,7 +401,7 @@ function _updateFileTree(fs_tree, fs_stats, ignoredPath) {
                     <a href="#" class="menu-action" title="Remove" onclick="app.removeDir('${n.path}');return false;"><i class="fa-solid fa-xmark fa-fw"></i></a>
                     <a href="#" class="menu-action" title="Create" onclick="app.createNewFile('${n.path}/');return false;"><i class="fa-solid fa-plus fa-fw"></i></a>
                 </div>`)
-                traverse(n.content, depth+1)
+                traverse(n.content, depth + 1)
             } else {
                 /* TODO ••• */
                 let icon;
@@ -495,7 +498,7 @@ export async function pyMinify() {
     const res = await minifyPython(input)
 
     editor.dispatch({
-      changes: { from: 0, to: editor.state.doc.length, insert: res }
+        changes: { from: 0, to: editor.state.doc.length, insert: res }
     })
 
     toastr.info(`Minified ${input.length} to ${res.length}`)
@@ -510,7 +513,7 @@ export async function pyPrettify() {
     const res = await prettifyPython(editor.state.doc.toString())
 
     editor.dispatch({
-      changes: { from: 0, to: editor.state.doc.length, insert: res }
+        changes: { from: 0, to: editor.state.doc.length, insert: res }
     })
 }
 
@@ -563,7 +566,7 @@ async function _loadContent(fn, content, editorElement) {
             devInfo,
             readOnly,
         })
-        document.dispatchEvent(new CustomEvent("editorLoaded", {detail: {editor: editor, fn: fn}}))
+        document.dispatchEvent(new CustomEvent("editorLoaded", { detail: { editor: editor, fn: fn } }))
         addUpdateHandler(editor, (update) => {
             if (update.docChanged) {
                 QS(`#menu-file-tree [data-fn="${fn}"]`).classList.add("changed")
@@ -588,7 +591,7 @@ export async function saveCurrentFile() {
         const fn = prompt(`Creating new file inside /\nPlease enter the name:`)
         if (fn == null || fn == '') return
         editorFn = fn
-        document.dispatchEvent(new CustomEvent("fileRenamed", {detail: {old: "Untitled", new: fn}}))
+        document.dispatchEvent(new CustomEvent("fileRenamed", { detail: { old: "Untitled", new: fn } }))
     }
 
     let content = editor.state.doc.toString()
@@ -619,7 +622,7 @@ export async function saveCurrentFile() {
     analytics.track('File Saved')
     toastr.success('File Saved')
 
-    document.dispatchEvent(new CustomEvent("fileSaved", {detail: {fn: editorFn}}))
+    document.dispatchEvent(new CustomEvent("fileSaved", { detail: { fn: editorFn } }))
     QS(`#menu-file-tree [data-fn="${editorFn}"]`).classList.remove("changed")
 }
 
@@ -740,7 +743,7 @@ export async function loadAllPkgIndexes() {
     }
 }
 
-async function _raw_installPkg(raw, pkg, { version=null } = {}) {
+async function _raw_installPkg(raw, pkg, { version = null } = {}) {
     analytics.track('Package Install', { name: pkg })
     toastr.info(`Installing ${pkg}...`)
     const dev_info = await raw.getDeviceInfo()
@@ -768,7 +771,7 @@ async function _raw_removePkg(raw, pkg, package_out) {
     toastr.success(`Removed ${pkg}`);
 }
 
-export async function installPkg(pkg, { version=null } = {}) {
+export async function installPkg(pkg, { version = null } = {}) {
     if (!port) {
         toastr.info('Connect your board first')
         return;
@@ -925,8 +928,8 @@ if (!document.fullscreenEnabled) {
 /* iOS: Disable auto-zoom on contenteditable */
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
     document
-      .querySelector("[name=viewport]")
-      .setAttribute("content","width=device-width, initial-scale=1, maximum-scale=1");
+        .querySelector("[name=viewport]")
+        .setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1");
 }
 
 export function toggleFullScreen(elementId) {
@@ -953,12 +956,12 @@ export function applyTranslation() {
         if (navigator.platform.indexOf("Mac") == 0) {
             metaKey = "Cmd"
         }
-        QID('btn-save').setAttribute('title',     T('tool.save') + ` [${metaKey}+S]`)
-        QID('btn-run').setAttribute('title',      T('tool.run') + ' [F5]')
+        QID('btn-save').setAttribute('title', T('tool.save') + ` [${metaKey}+S]`)
+        QID('btn-run').setAttribute('title', T('tool.run') + ' [F5]')
         // QID('btn-conn-ws').setAttribute('title',  T('tool.conn.ws'))
         // QID('btn-conn-ble').setAttribute('title', T('tool.conn.ble'))
         QID('btn-conn-usb').setAttribute('title', T('tool.conn.usb'))
-        QID('term-clear').setAttribute('title',   T('tool.clear'))
+        QID('term-clear').setAttribute('title', T('tool.clear'))
         QID('tab-term').innerText = T('tool.terminal')
 
         QSA('#app-expand, #term-expand').forEach(el => {
@@ -1083,7 +1086,7 @@ export function applyTranslation() {
             referrer: document.referrer,
         })
 
-        const idleMonitor = new IdleMonitor(3*60*1000);
+        const idleMonitor = new IdleMonitor(3 * 60 * 1000);
 
         idleMonitor.setIdleCallback(() => {
             analytics.track('User Idle')
@@ -1095,7 +1098,7 @@ export function applyTranslation() {
 
     } catch (_err) {
         window.analytics = {
-            track: function() {}
+            track: function() { }
         }
     }
 
@@ -1266,7 +1269,7 @@ let lastUpdateCheck = 0;
 
 async function checkForUpdates() {
     const now = new Date()
-    if (now - lastUpdateCheck < 60*60*1000) {
+    if (now - lastUpdateCheck < 60 * 60 * 1000) {
         return
     }
     lastUpdateCheck = now
@@ -1281,7 +1284,7 @@ async function checkForUpdates() {
     } catch {
         return
     }
-    if (current_version.localeCompare(manifest.version, undefined, {numeric: true, sensitivity: "base"}) < 0) {
+    if (current_version.localeCompare(manifest.version, undefined, { numeric: true, sensitivity: "base" }) < 0) {
         toastr.info(`New ViperIDE version ${manifest.version} is available`)
         QID('viper-ide-version').innerHTML = `${current_version} (<a href="javascript:app.updateApp()">update</a>)`
 
@@ -1301,7 +1304,7 @@ export function updateApp() {
     window.location.reload()
 }
 
-window.addEventListener('visibilitychange', function () {
+window.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'visible') {
         //console.log('APP resumed')
         checkForUpdates()
