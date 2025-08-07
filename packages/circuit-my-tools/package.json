@@ -1,6 +1,0 @@
-{
-    "version": "1.0.0",
-    "urls": [
-        ["kek/test.py", "github:baztechmy/coding-circuits-my/packages/circuit-my-tools/test.py"]
-    ]
-}

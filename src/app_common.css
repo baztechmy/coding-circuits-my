@@ -260,6 +260,7 @@ button.connected {
 #menu-file-tree-connect span {
     background-color: #87c244;
     padding: 5px 5px;
+    border-radius: 3px;
 }
 
 #menu-pkg-list .menu-action {
