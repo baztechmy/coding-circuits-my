@@ -46,7 +46,7 @@ import {
     faLink, faBars, faDownload, faFloppyDisk, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
     faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
     faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
-    faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark
+    faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark, faLinkSlash
 } from '@fortawesome/free-solid-svg-icons'
 import { faMessage, faCircleDown } from '@fortawesome/free-regular-svg-icons'
 
@@ -54,7 +54,7 @@ library.add(faUsb, faBluetoothB)
 library.add(faLink, faBars, faDownload, faFloppyDisk, faCirclePlay, faCircleStop, faFolder, faFile, faFileCircleExclamation, faCubes, faGear,
     faCube, faTools, faSliders, faCircleInfo, faStar, faExpand, faCertificate,
     faPlug, faArrowUpRightFromSquare, faTerminal, faBug, faGaugeHigh,
-    faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark)
+    faTrashCan, faArrowsRotate, faPowerOff, faPlus, faXmark, faLinkSlash)
 library.add(faMessage, faCircleDown)
 dom.watch()
 
