@@ -745,7 +745,6 @@ async function _raw_removePkg(raw, pkg, package_out) {
     toastr.info(`Removing ${pkg}`);
 
     for (const component of package_out[pkg]) {
-        console.log(component);
         if (component.isDir) await raw.removeDirRecursive(`/lib/${component.node}`);
         else await raw.removeFile(`/lib/${component.node}`);
     }
