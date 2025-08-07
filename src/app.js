@@ -698,6 +698,16 @@ export async function runCurrentFile() {
 export async function loadAllPkgIndexes() {
     const pkgList = QID('menu-pkg-list')
     pkgList.innerHTML = ''
+
+    const package_in = await (async () => {
+        if (!port) return {};
+        const raw = await MpRawMode.begin(port);
+        if (!(await raw.fileExists('/lib/package.json'))) await raw.writeFile('/lib/package.json', '{}');
+        const package_in = JSON.parse(await raw.readFileText('/lib/package.json'));
+        await raw.end();
+        return package_in;
+    })();
+
     for (const i of await getPkgIndexes()) {
         pkgList.insertAdjacentHTML('beforeend', `<div class="title-lines">${i.name}</div>`)
         for (const pkg of i.index.packages) {
@@ -719,8 +729,13 @@ export async function loadAllPkgIndexes() {
             }
             pkgList.insertAdjacentHTML('beforeend', `<div>
                 ${offset}<span><i class="fa-solid fa-cube fa-fw"></i> ${pkg.name}${icon}</span>
-                <a href="#" class="menu-action" data-fn="${pkg.name}" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} <span class="btn-menu-pkg-action"><i class="fa-regular fa-circle-down"></i> Install</span></a>
-            </div>`)
+                <a href="#" class="menu-action" data-fn="${pkg.name}" onclick="app.installPkg('${pkg.name}');return false;">${pkg.version} </a>
+            </div>`);
+            const html_btn = package_in[pkg.name] ?
+                '<span class="btn-mcnu-pkg-action installed"><i class="fa-solid fa-xmark fa-fw"></i> Remove</span>' :
+                '<span class="btn-menu-pkg-action"><i class="fa-regular fa-circle-down"></i> Install</span>';
+            const pkg_list = QS(`#menu-pkg-list [data-fn="${pkg.name}"]`);
+            pkg_list.insertAdjacentHTML('beforeend', html_btn);
         }
     }
 }
