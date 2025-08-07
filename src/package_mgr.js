@@ -193,6 +193,8 @@ export async function rawInstallPkg(raw, name, { dev = null, version = null, ind
             MPY: dev.mpy_ver + '.' + dev.mpy_sub,
             MPY_MAJ: '' + dev.mpy_ver,
         }
+        if (!(await raw.fileExists('/lib/package.json'))) await raw.writeFile('/lib/package.json', '{}');
+        const package_out = JSON.parse(await raw.readFileText('/lib/package.json'));
         for (let [fn, url, ..._] of pkg_info.urls) {
             url = rewriteUrl(url, { base: pkg_json, branch: version })
             url = expandVars(url, vars)
@@ -220,7 +222,15 @@ export async function rawInstallPkg(raw, name, { dev = null, version = null, ind
             await raw.makePath(dirname)
 
             await raw.writeFile(fn, content, 128, true)
+
+            // Update package.json
+            const node = fn.replace('//', '/').split('/')[2];
+            if (!package_out[name]) package_out[name] = [];
+            if (!package_out[name].some(val => val.node === node)) {
+                package_out[name].push({ node: node, isDir: node.match(/\.[A-Za-z0-9]*$/g) ? false : true});
+            }
         }
+        await raw.writeFile('/lib/package.json', JSON.stringify(package_out, null, '  '));
     }
 
     if ('deps' in pkg_info) {
