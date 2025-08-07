@@ -175,6 +175,7 @@ export async function rawInstallPkg(raw, name, { dev = null, version = null, ind
     }
 
     if ('hashes' in pkg_info) {
+        const package_out = JSON.parse(await raw.readFileText('/lib/package.json'));
         for (let [fn, hash, ..._] of pkg_info.hashes) {
             const content = await fetchArrayBuffer(rewriteUrl(`${index.url}/file/${hash.slice(0, 2)}/${hash}`))
             fn = `${lib_path}/${fn}`
@@ -184,7 +185,15 @@ export async function rawInstallPkg(raw, name, { dev = null, version = null, ind
             await raw.makePath(dirname)
 
             await raw.writeFile(fn, content, 128, true)
+
+            // Update package.json
+            const node = fn.replace('//', '/').split('/')[2];
+            if (!package_out[name]) package_out[name] = [];
+            if (!package_out[name].some(val => val.node === node)) {
+                package_out[name].push({ node: node, isDir: node.match(/\.[A-Za-z0-9]*$/g) ? false : true});
+            }
         }
+        await raw.writeFile('/lib/package.json', JSON.stringify(package_out, null, '  '));
     }
 
     if ('urls' in pkg_info) {
