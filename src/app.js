@@ -741,14 +741,50 @@ async function _raw_installPkg(raw, pkg, { version=null } = {}) {
     }
 }
 
+async function _raw_removePkg(raw, pkg, package_out) {
+    toastr.info(`Removing ${pkg}`);
+
+    for (const component of package_out[pkg]) {
+        console.log(component);
+        if (component.isDir) await raw.removeDirRecursive(`/lib/${component.node}`);
+        else await raw.removeFile(`/lib/${component.node}`);
+    }
+    delete package_out[pkg];
+    await raw.writeFile('/lib/package.json', JSON.stringify(package_out, null, '  '));
+    toastr.success(`Removed ${pkg}`);
+}
+
 export async function installPkg(pkg, { version=null } = {}) {
     if (!port) {
         toastr.info('Connect your board first')
         return;
     }
     const raw = await MpRawMode.begin(port);
+
     const prev_btn_pkg = QS(`#menu-pkg-list [data-fn="${pkg}"] span`);
     const pkg_list = QS(`#menu-pkg-list [data-fn="${pkg}"]`);
+
+    if (!(await raw.fileExists('/lib/package.json'))) await raw.writeFile('/lib/package.json', '{}');
+    const package_in = JSON.parse(await raw.readFileText('/lib/package.json'));
+    if (package_in[pkg]) {
+        try {
+            prev_btn_pkg.remove();
+            pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action removing">Removing...</span>`);
+            await _raw_removePkg(raw, pkg, package_in);
+            await _raw_updateFileTree(raw);
+            QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
+            pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action"><i class="fa-regular fa-circle-down"></i> Install</span>`)
+        } catch (err) {
+            report(`Failed to remove ${pkg}`, err);
+            QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
+            pkg_list.appendChild(prev_btn_pkg);
+        } finally {
+            await raw.end();
+        }
+
+        return;
+    }
+
     try {
         prev_btn_pkg.remove();
         pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action installing">Installing...</span>`);
