@@ -340,25 +340,7 @@ export async function removeDir(path) {
     if (!confirm(`Remove ${path}?`)) return
     const raw = await MpRawMode.begin(port)
     try {
-        const arr_path = path.split('/');
-        arr_path.shift();
-        let nodes = await raw.walkFs();
-        for (const entry of arr_path) {
-            nodes = nodes.find(node => node.name === entry).content;
-        }
-
-        async function traverse(nodes) {
-            for (const node of nodes) {
-                if (node.name.match(/\.[A-Za-z0-9]*$/g)) await raw.removeFile(node.path);
-                else {
-                    await traverse(node.content);
-                    await raw.removeDir(node.path);
-                }
-            }
-        }
-        await traverse(nodes);
-
-        await raw.removeDir(path)
+        await raw.removeDirRecursive(path);
         await _raw_updateFileTree(raw, path);
         document.dispatchEvent(new CustomEvent("dirRemoved", {detail: {path: path}}))
     } finally {
@@ -761,8 +743,8 @@ async function _raw_installPkg(raw, pkg, { version=null } = {}) {
 
 export async function installPkg(pkg, { version=null } = {}) {
     if (!port) {
-        toastr.info('Connect yout board first')
-        return
+        toastr.info('Connect your board first')
+        return;
     }
     const raw = await MpRawMode.begin(port);
     const prev_btn_pkg = QS(`#menu-pkg-list [data-fn="${pkg}"] span`);
@@ -775,7 +757,7 @@ export async function installPkg(pkg, { version=null } = {}) {
         QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
         pkg_list.insertAdjacentHTML('beforeend', `<span class="btn-menu-pkg-action installed"><i class="fa-solid fa-xmark fa-fw"></i> Remove</span>`)
     } catch (err) {
-        report('Installing failed', err)
+        report('Failed to install', err)
         QS(`#menu-pkg-list [data-fn="${pkg}"] span`).remove();
         pkg_list.appendChild(prev_btn_pkg);
     } finally {
