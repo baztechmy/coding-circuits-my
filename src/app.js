@@ -395,6 +395,7 @@ function _updateFileTree(fs_tree, fs_stats, ignoredPath) {
     function traverse(node, depth) {
         const offset = '&emsp;'.repeat(depth)
         for (const n of sorted(node)) {
+            if (n.path === '/lib') continue;
             if ('content' in n) {
                 fileTree.insertAdjacentHTML('beforeend', `<div>
                     ${offset}<span class="folder name"><i class="fa-solid fa-folder fa-fw"></i> ${n.name}</span>
@@ -1119,15 +1120,9 @@ export function applyTranslation() {
     toastr.options.preventDuplicates = true;
 
     const fn = 'test.py'
-    const content = `
-# ViperIDE - MicroPython Web IDE
-# Read more: https://github.com/vshymanskyy/ViperIDE
+    const content = `# Circuit.My - MicroPython Web IDE
 
-# Connect your device and start creating! 🤖👨‍💻🕹️
-
-# You can also open a virtual device and explore some examples:
-# https://viper-ide.org?vm=1
-`
+# Connect your device and start creating!`
     await _loadContent(fn, content, createTab(fn))
 
     const xtermTheme = {
