@@ -84,8 +84,9 @@ async function disconnectDevice() {
     }
 
     for (const t of ['ws', 'ble', 'usb']) {
-        QID(`btn-conn-${t}`).classList.remove('connected')
+        QID(`btn-conn-${t}`)?.classList?.remove('connected')
     }
+    await refreshLoadedPkgIndexes();
 }
 
 let defaultWsURL = 'ws://192.168.1.123:8266'
