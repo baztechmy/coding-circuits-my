@@ -269,8 +269,8 @@ button.connected {
 }
 
 #menu-pkg-list .menu-action span {
-    padding-left: 2px;
-    padding-right: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
     border-radius: 3px;
     color: white;
     background-color: #87c244;
@@ -281,7 +281,8 @@ button.connected {
     background-color: #a7db6d;
 }
 
-#menu-pkg-list .menu-action span.installing {
+#menu-pkg-list .menu-action span.installing,
+#menu-pkg-list .menu-action span.removing {
     background-color: #e1aa36;
 }
 
