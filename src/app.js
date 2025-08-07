@@ -340,6 +340,24 @@ export async function removeDir(path) {
     if (!confirm(`Remove ${path}?`)) return
     const raw = await MpRawMode.begin(port)
     try {
+        const arr_path = path.split('/');
+        arr_path.shift();
+        let nodes = await raw.walkFs();
+        for (const entry of arr_path) {
+            nodes = nodes.find(node => node.name === entry).content;
+        }
+
+        async function traverse(nodes) {
+            for (const node of nodes) {
+                if (node.name.match(/\.[A-Za-z0-9]*$/g)) await raw.removeFile(node.path);
+                else {
+                    await traverse(node.content);
+                    await raw.removeDir(node.path);
+                }
+            }
+        }
+        await traverse(nodes);
+
         await raw.removeDir(path)
         await _raw_updateFileTree(raw, path);
         document.dispatchEvent(new CustomEvent("dirRemoved", {detail: {path: path}}))
@@ -428,7 +446,7 @@ function _updateFileTree(fs_tree, fs_stats, ignoredPath) {
             }
         }
     }
-    console.dir(fs_tree, { depth: null });
+    // console.dir(fs_tree, { depth: null });
     traverse(fs_tree, 1)
 
     for (let fn of changed_files) {
