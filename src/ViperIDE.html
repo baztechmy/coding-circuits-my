@@ -44,10 +44,11 @@
             <div id="menu-files" class="tab-content active">
                 <div id="menu-file-title">File Manager</div>
                 <div id="menu-file-tree">
-                    <div><span class="folder name"><i class="fa-solid fa-folder fa-fw"></i> /</span></div>
-                    <div>
-                        <a href="#" class="name" onclick="app.connectDevice('usb');return false;">&emsp;🤔 <span id="no-files">no files</span></a>
-                        <a href="#" class="menu-action" onclick="app.connectDevice('usb');return false;"><i class="fa-solid fa-plug"></i></a>
+                    <br>
+                    <div><span><i class="fa-solid fa-link-slash"></i> no device currently connected</span></div>
+                    <br>
+                    <div id="menu-file-tree-connect">
+                        <a href="#" onclick="app.connectDevice('usb');return false;"><span><i class="fa-brands fa-usb"></i> Connect device via USB</span></a>
                     </div>
                 </div>
             </div>
