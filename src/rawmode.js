@@ -270,6 +270,26 @@ except OSError as e:
 `)
     }
 
+    async removeDirRecursive(path) {
+        const [_, ...arr_path] = path.split('/');
+        let nodes = await this.walkFs();
+        for (const entry of arr_path) {
+            nodes = nodes.find(node => node.name === entry).content;
+        }
+
+        async function traverse(raw, nodes) {
+            for (const node of nodes) {
+                if (node.name.match(/\.[A-Za-z0-9]*$/g)) await raw.removeFile(node.path);
+                else {
+                    await traverse(raw, node.content);
+                    await raw.removeDir(node.path);
+                }
+            }
+        }
+        await traverse(this, nodes);
+        await this.removeDir(path);
+    }
+
     async getFsStats(path='/') {
         const rsp = await this.exec(`
 s = os.statvfs('${path}')
