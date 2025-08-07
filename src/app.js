@@ -86,6 +86,15 @@ async function disconnectDevice() {
     for (const t of ['ws', 'ble', 'usb']) {
         QID(`btn-conn-${t}`)?.classList?.remove('connected')
     }
+    QID('menu-file-tree').innerHTML = '';
+    QID('menu-file-tree').insertAdjacentHTML('beforeend', `
+        <br>
+        <div><span><i class="fa-solid fa-link-slash"></i> no device currently connected</span></div>
+        <br>
+        <div id="menu-file-tree-connect">
+            <a href="#" onclick="app.connectDevice('usb');return false;"><span><i class="fa-brands fa-usb"></i> Connect device via USB</span></a>
+        </div>
+    `);
     await refreshLoadedPkgIndexes();
 }
 
